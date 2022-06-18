@@ -32,6 +32,7 @@ export type Opts = {
   moduleSourceName?: string
   separator?: string
   relativeTo?: string
+  includes?: string | string[]
 }
 
 export type State = {

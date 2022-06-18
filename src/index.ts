@@ -10,8 +10,22 @@ export default function () {
     visitor: {
       JSXElement: visitJSXElement,
       CallExpression(path, state: State) {
-        addIdToFormatMessage(path, state)
-        addIdToDefineMessage(path, state)
+        let isMatchedFile = true
+        if (typeof state.opts.includes === 'string') {
+          isMatchedFile = state.file.opts.filename
+            .slice(state.file.opts.cwd.length)
+            .startsWith(state.opts.includes)
+        } else if (Array.isArray(state.opts.includes)) {
+          isMatchedFile = state.opts.includes.some((n) =>
+            state.file.opts.filename
+              .slice(state.file.opts.cwd.length)
+              .startsWith(n)
+          )
+        }
+        if (isMatchedFile) {
+          addIdToFormatMessage(path, state)
+          addIdToDefineMessage(path, state)
+        }
       },
     },
   } as PluginObj
